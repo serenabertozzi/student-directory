@@ -13,13 +13,13 @@ def input_students
     #get the cohort
     puts "Please enter the cohort of the student"
     loop do
-      month = gets.chomp
-      if month.empty?
-        month = :unknown
+      cohort = gets.chomp
+      if cohort.empty?
+        cohort = :unknown
       end
-      if Date::MONTHNAMES[1..].include?(month) || month = :unknown
+      if Date::MONTHNAMES[1..].include?(cohort) || cohort = :unknown
         #add the students hash to the array
-        students << { name: name, cohort: month.to_sym }
+        students << { name: name, cohort: cohort.to_sym }
         puts "Now we have #{students.count} #{students.count > 1 ? "students" : "student"}"
         break
       else puts "This doesn't seem quite right..."       end
@@ -37,10 +37,15 @@ def print_header
 end
 
 def print(students)
-  current_index = 0
-  while current_index < students.length
-    puts "#{students[current_index][:name]} (#{students[current_index][:cohort]} cohort)".center(34)
-    current_index += 1
+  cohorts = {}
+  students.each do |student|
+    if cohorts[student[:cohort]].nil?
+      cohorts[student[:cohort]] = []
+    end
+    cohorts[student[:cohort]] << student[:name]
+  end
+  cohorts.keys.each do |key|
+    puts "#{key} : #{cohorts[key].join(", ")}"
   end
 end
 
