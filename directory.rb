@@ -9,7 +9,7 @@ def input_students
   while !name.empty?
     #add the students hash to the array
     students << { name: name, cohort: :november }
-    puts "Now we have #{students.count} students"
+    puts "Now we have #{students.count} #{students.count > 1 ? "students" : "student"}"
     #get another name from the user
     name = gets.chomp
   end
@@ -31,7 +31,7 @@ def print(students)
 end
 
 def print_footer(students)
-  puts "Overall, we have #{students.count} great students"
+  puts "Overall, we have #{students.count} great #{students.count > 1 ? "students" : "student"}"
 end
 
 #nothing happens until we call the methods
