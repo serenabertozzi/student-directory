@@ -25,7 +25,7 @@ end
 def print(students)
   current_index = 0
   while current_index < students.length
-    puts "#{students[current_index][:name]} (#{students[current_index][:cohort]} cohort)"
+    puts "#{students[current_index][:name]} (#{students[current_index][:cohort]} cohort)".center(34)
     current_index += 1
   end
 end
