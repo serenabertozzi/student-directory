@@ -1,3 +1,6 @@
+require "date"
+Date::MONTHNAMES[1..]
+
 def input_students
   puts "Please enter the names of the students"
   puts "To finish, just hit return twice"
@@ -7,9 +10,20 @@ def input_students
   name = gets.chomp
   #while the name is not empty, repeat this code
   while !name.empty?
-    #add the students hash to the array
-    students << { name: name, cohort: :november }
-    puts "Now we have #{students.count} #{students.count > 1 ? "students" : "student"}"
+    #get the cohort
+    puts "Please enter the cohort of the student"
+    loop do
+      month = gets.chomp
+      if month.empty?
+        month = :unknown
+      end
+      if Date::MONTHNAMES[1..].include?(month) || month = :unknown
+        #add the students hash to the array
+        students << { name: name, cohort: month.to_sym }
+        puts "Now we have #{students.count} #{students.count > 1 ? "students" : "student"}"
+        break
+      else puts "This doesn't seem quite right..."       end
+    end
     #get another name from the user
     name = gets.chomp
   end
