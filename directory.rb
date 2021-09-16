@@ -7,13 +7,13 @@ def input_students
   #create an empty array
   students = []
   # get the first name
-  name = gets.chomp
+  name = gets.gsub("\n", "")
   #while the name is not empty, repeat this code
   while !name.empty?
     #get the cohort
     puts "Please enter the cohort of the student"
     loop do
-      cohort = gets.chomp
+      cohort = gets.gsub("\n", "")
       if cohort.empty?
         cohort = :unknown
       end
@@ -25,7 +25,7 @@ def input_students
       else puts "This doesn't seem quite right..."       end
     end
     #get another name from the user
-    name = gets.chomp
+    name = gets.gsub("\n", "")
   end
   #return the array of students
   students
