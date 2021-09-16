@@ -28,7 +28,9 @@ def input_students
     name = gets.gsub("\n", "")
   end
   #return the array of students
-  students
+  if !students.empty?
+    students
+  end
 end
 
 def print_header
