@@ -19,7 +19,7 @@ def input_students
       end
       if Date::MONTHNAMES[1..].include?(cohort) || cohort = :unknown
         #add the students hash to the array
-        students << { name: name, cohort: cohort.to_sym }
+        students << { name: name, cohort: cohort.to_sym, hobby: "causing troubles", country_of_birth: :nowhere, height: :unknown }
         puts "Now we have #{students.count} #{students.count > 1 ? "students" : "student"}"
         break
       else puts "This doesn't seem quite right..."       end
