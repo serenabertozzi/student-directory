@@ -1,3 +1,4 @@
+require "csv"
 @students = []
 
 COMMANDS = {
@@ -36,6 +37,7 @@ def read_student(string)
 end
 
 def input_students
+  puts "Here you can input new students"
   puts "Please enter the names of the students"
   puts "To finish, just hit return twice"
 
@@ -48,14 +50,13 @@ def input_students
 end
 
 def load_students(filename = "students.csv")
-  file = File.open(filename, "r")
-  file.readlines.each do |line|
-    read_student(line)
-  end
-  file.close
+  puts "Loading the list of students"
+  @students.clear
+  CSV.read(filename).each { |row| @students << { name: row[0], cohort: row[1] } }
 end
 
 def show_students
+  puts "Showing the students"
   print_header
   print_students_list
   print_footer
@@ -77,15 +78,15 @@ def print_footer
 end
 
 def save_students
+  puts "Saving the list of students"
   # open the file for writing
-  file = File.open("students.csv", "w")
-  # iterate over the array of students
-  @students.each do |student|
-    student_data = [student[:name], student[:cohort]]
-    csv_line = student_data.join(", ")
-    file.puts csv_line
+  puts "Please, write a name for the students list"
+  CSV.open("#{STDIN.gets.chomp}.csv", "w") do |csv|
+    @students.each do |student|
+      student_data = [student[:name], student[:cohort]]
+      csv << student_data
+    end
   end
-  file.close
 end
 
 def try_load_students
