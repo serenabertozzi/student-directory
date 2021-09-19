@@ -1,13 +1,17 @@
-require "date"
-Date::MONTHNAMES[1..]
 @students = []
 
+COMMANDS = {
+  "1" => ["Input the students", :input_students],
+  "2" => ["Show the students", :show_students],
+  "3" => ["Save the list to students.csv", :save_students],
+  "4" => ["Load the list from students.csv", :load_students],
+  "9" => ["Exit", :exit],
+}
+
 def print_menu
-  puts "1. Input the students"
-  puts "2. Show the students"
-  puts "3. Save the list to students.csv"
-  puts "4. Load the list from students.csv"
-  puts "9. Exit "
+  COMMANDS.each do |key, value|
+    puts "#{key}. #{value[0]}"
+  end
 end
 
 def intreractive_menu
@@ -18,45 +22,37 @@ def intreractive_menu
 end
 
 def process(selection)
-  case selection
-  when "1"
-    input_students
-  when "2"
-    show_students
-  when "3"
-    save_students
-  when "4"
-    load_students
-  when "9"
-    exit
-  else puts "I don't know what you meant, try again"
+  command = COMMANDS[selection][1]
+  if command.nil?
+    puts "I don't know what you meant, try again"
+  else
+    send(command)
   end
+end
+
+def read_student(string)
+  name, cohort = string.chomp.split(",")
+  @students << { name: name, cohort: cohort || :november }
 end
 
 def input_students
   puts "Please enter the names of the students"
   puts "To finish, just hit return twice"
-  # get the first name
-  name = gets.gsub("\n", "")
-  #while the name is not empty, repeat this code
-  while !name.empty?
-    #get the cohort
-    puts "Please enter the cohort of the student"
-    loop do
-      cohort = STDIN.gets.chomp
-      if cohort.empty?
-        cohort = :unknown
-      end
-      if Date::MONTHNAMES[1..].include?(cohort) || cohort == :unknown
-        #add the students hash to the array
-        @students << { name: name, cohort: cohort.to_sym }
-        puts "Now we have #{@students.count} #{@students.count > 1 ? "students" : "student"}"
-        break
-      else puts "This doesn't seem quite right..."       end
-    end
-    #get another name from the user
-    name = STDIN.gets.chomp
+
+  loop do
+    line = STDIN.gets.chomp
+    break if line.empty?
+    read_student(line)
+    puts "Now we have #{@students.count} students"
   end
+end
+
+def load_students(filename = "students.csv")
+  file = File.open(filename, "r")
+  file.readlines.each do |line|
+    read_student(line)
+  end
+  file.close
 end
 
 def show_students
@@ -71,15 +67,8 @@ def print_header
 end
 
 def print_students_list
-  cohorts = {}
   @students.each do |student|
-    if cohorts[student[:cohort]].nil?
-      cohorts[student[:cohort]] = []
-    end
-    cohorts[student[:cohort]] << student[:name]
-  end
-  cohorts.keys.each do |key|
-    puts "#{key} : #{cohorts[key].join(", ")}"
+    puts "#{student[:name]} (#{student[:cohort]} cohort)"
   end
 end
 
@@ -99,25 +88,17 @@ def save_students
   file.close
 end
 
-def load_students(filename = "students.csv")
-  file = File.open(filename, "r")
-  file.readlines.each do |line|
-    name, cohort = line.chomp.split(",")
-    @students << { name: name, cohort: cohort.to_sym }
-  end
-  file.close
-end
-
 def try_load_students
-  filename = ARGV.first #first argument of the command line
-  return if filename.nil? #get out of the method if it isn't given
-  if File.exist?(filename) # if it exists
+  filename = ARGV.first || "students.csv"
+  return if filename.nil? # get out of the method if it isn't given
+  if File.exists?(filename) # if it exists
     load_students(filename)
-    puts "Loaded #{students.count} from #{filename}"
+    puts "Loaded #{@students.count} from #{filename}"
   else # if it doesn't exist
     puts "Sorry, #{filename} doesn't exist."
-    exit #quit the program.
+    exit # quit the program
   end
 end
 
+try_load_students
 intreractive_menu
